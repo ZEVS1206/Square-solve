@@ -4,55 +4,61 @@
 #include <math.h>
 #include <ctype.h>
 
+struct Discriminant_and_imagine_units{
+    float discriminant = 0;
+    int count_of_iu = 0;
+};
 
-void discriminant(float b, float c, float a, float D[]);/*discriminant*/
-void decisions(float a, float b, float D[]);/*Finding solutions*/
+struct Discriminant_and_imagine_units finding_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units );/*discriminant*/
+void finding_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units );/*Finding solutions*/
 
 int main(){
-    float a, b, c;
-    printf("Введите коэффициент a:");
-    scanf("%f", &a);
+    float coefficient_a, coefficient_b, coefficient_c;
+    printf("Р’РІРµРґРёС‚Рµ РєРѕСЌС„С„РёС†РёРµРЅС‚ a:");
+    scanf("%f", &coefficient_a);
     printf("\n");
-    printf("Введите коэффициент b:");
-    scanf("%f", &b);
+    printf("Р’РІРµРґРёС‚Рµ РєРѕСЌС„С„РёС†РёРµРЅС‚ b:");
+    scanf("%f", &coefficient_b);
     printf("\n");
-    printf("Введите коэффициент c:");
-    scanf("%f", &c);
+    printf("Р’РІРµРґРёС‚Рµ РєРѕСЌС„С„РёС†РёРµРЅС‚ c:");
+    scanf("%f", &coefficient_c);
     printf("\n");
-    float D[2] = {0, 0};
-    discriminant(b, c, a, D);/*discriminant*/
-    decisions(a, b, D);
+    struct Discriminant_and_imagine_units element;
+    element = finding_discriminant(coefficient_b, coefficient_c, coefficient_a, element);/*discriminant*/
+    finding_solutions(coefficient_a, coefficient_b, element);
     return 0;
 }
 
-void discriminant(float b, float c, float a, float D[]){
-    float discr2 = b * b - 4 * a * c;/*D**2*/
+struct Discriminant_and_imagine_units finding_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units element){
+    float discr2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;/*D**2*/
     /*D[0] - discriminant, D[1] - count of imaginary units*/
     if (discr2 >= 0){/*There are real solutions*/
-        D[0] = sqrt(discr2);
-        D[1] = 0;
+        element.discriminant = sqrt(discr2);
+        element.count_of_iu = 0;
+        return element;
     } else {/*There are complex solutions*/
         discr2 = -discr2;
-        D[0] = sqrt(discr2);
-        D[1] = 1;
+        element.discriminant = sqrt(discr2);
+        element.count_of_iu = 1;
+        return element;
     }
 }
 
-void decisions(float a, float b, float Discr[]){
-    if (Discr[1] > 0){/*Complex solutions*/
-        printf("Уравнение имеет два комплексных решения:\n");
-        printf("x1 = (%.8f + %.8fi) / %.8f\n", -b, Discr[0], 2 * a);
-        printf("x2 = (%.8f - %.8fi) / %.8f\n", -b, Discr[0], 2 * a);
+void finding_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units element){
+    if (element.count_of_iu > 0){/*Complex solutions*/
+        printf("РЈСЂР°РІРЅРµРЅРёРµ РёРјРµРµС‚ РґРІР° РєРѕРјРїР»РµРєСЃРЅС‹С… СЂРµС€РµРЅРёСЏ:\n");
+        printf("x1 = (%.8f + %.8fi) / %.8f\n", -coefficient_b, element.discriminant, 2 * coefficient_a);
+        printf("x2 = (%.8f - %.8fi) / %.8f\n", -coefficient_b, element.discriminant, 2 * coefficient_a);
     } else {/*Real Solutions*/
-        if (Discr[0] == 0){
-            printf("Уравнение имеет единственное действительное решение:\n");
-            float x = (-b) / (2 * a);
+        if (element.discriminant == 0){
+            printf("РЈСЂР°РІРЅРµРЅРёРµ РёРјРµРµС‚ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ:\n");
+            float x = (-coefficient_b) / (2 * coefficient_a);
             printf("x = %.8f\n", x);
         } else {
-            printf("Уравнение имеет два действительных решения:\n");
+            printf("РЈСЂР°РІРЅРµРЅРёРµ РёРјРµРµС‚ РґРІР° РґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹С… СЂРµС€РµРЅРёСЏ:\n");
             float x1, x2;
-            x1 = (-b + Discr[0]) / (2 * a);
-            x2 = (-b - Discr[0]) / (2 * a);
+            x1 = (-coefficient_b + element.discriminant) / (2 * coefficient_a);
+            x2 = (-coefficient_b - element.discriminant) / (2 * coefficient_a);
             printf("x1 = %.8f\nx2 = %.8f\n", x1, x2);
         }
     }
