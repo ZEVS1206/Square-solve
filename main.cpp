@@ -5,8 +5,8 @@
 #include <ctype.h>
 
 struct Discriminant_and_imagine_units{
-    float discriminant = 0;
-    int count_of_iu = 0;
+    float discriminant;
+    int count_of_iu;
 };
 
 struct Discriminant_and_imagine_units *finding_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
@@ -24,8 +24,8 @@ int main(){
     scanf("%f", &coefficient_c);
     printf("\n");
     struct Discriminant_and_imagine_units *element;// = (struct Discriminant_and_imagine_units *) malloc(sizeof(struct Discriminant_and_imagine_units));
-    element = finding_discriminant(coefficient_b, coefficient_c, coefficient_a, element);/*discriminant*/
-    finding_solutions(coefficient_a, coefficient_b, element);
+    element = finding_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);/*discriminant*/
+    finding_solutions(coefficient_a, coefficient_b, &element);
     return 0;
 }
 
