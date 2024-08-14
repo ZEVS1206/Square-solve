@@ -23,7 +23,7 @@ int main(){
     printf("Введите коэффициент c:");
     scanf("%f", &coefficient_c);
     printf("\n");
-    struct Discriminant_and_imagine_units *element = (struct Discriminant_and_imagine_units *) malloc(sizeof(struct Discriminant_and_imagine_units));
+    struct Discriminant_and_imagine_units *element;// = (struct Discriminant_and_imagine_units *) malloc(sizeof(struct Discriminant_and_imagine_units));
     element = finding_discriminant(coefficient_b, coefficient_c, coefficient_a, element);/*discriminant*/
     finding_solutions(coefficient_a, coefficient_b, element);
     return 0;
