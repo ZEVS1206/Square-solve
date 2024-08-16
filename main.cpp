@@ -9,11 +9,11 @@ struct Discriminant_and_imagine_units{
     int count_of_iu;
 };
 
-void finding_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
-void finding_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *);/*Finding solutions*/
+void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
+void find_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *);/*Find solutions*/
 
 int main(){
-    float coefficient_a, coefficient_b, coefficient_c;
+    float coefficient_a = 0.0f, coefficient_b = 0.0f, coefficient_c = 0.0f;
     printf("Введите коэффициент a:");
     scanf("%f", &coefficient_a);
     printf("\n");
@@ -23,14 +23,14 @@ int main(){
     printf("Введите коэффициент c:");
     scanf("%f", &coefficient_c);
     printf("\n");
-    struct Discriminant_and_imagine_units element;// = (struct Discriminant_and_imagine_units *) malloc(sizeof(struct Discriminant_and_imagine_units));
-    finding_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);/*discriminant*/
-    finding_solutions(coefficient_a, coefficient_b, &element);
+    struct Discriminant_and_imagine_units element = {0};// = (struct Discriminant_and_imagine_units *) malloc(sizeof(struct Discriminant_and_imagine_units));
+    find_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);/*discriminant*/
+    find_solutions(coefficient_a, coefficient_b, &element);
     return 0;
 }
 
-void finding_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *element){
-    float discr2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;/*D**2*/
+void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *element){
+    float discr2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;/*Discriminant**2*/
     /*D[0] - discriminant, D[1] - count of imaginary units*/
     if (discr2 >= 0){/*There are real solutions*/
         element->discriminant = sqrt(discr2);
@@ -42,7 +42,7 @@ void finding_discriminant(float coefficient_b, float coefficient_c, float coeffi
     }
 }
 
-void finding_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *element){
+void find_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *element){
     if (element->count_of_iu > 0){/*Complex solutions*/
         printf("Уравнение имеет два комплексных решения:\n");
         printf("x1 = (%.8f + %.8fi) / %.8f\n", -coefficient_b, element->discriminant, 2 * coefficient_a);
@@ -54,7 +54,7 @@ void finding_solutions(float coefficient_a, float coefficient_b, struct Discrimi
             printf("x = %.8f\n", x);
         } else {
             printf("Уравнение имеет два действительных решения:\n");
-            float x1, x2;
+            float x1 = 0.0f, x2 = 0.0f;
             x1 = (-coefficient_b + element->discriminant) / (2 * coefficient_a);
             x2 = (-coefficient_b - element->discriminant) / (2 * coefficient_a);
             printf("x1 = %.8f\nx2 = %.8f\n", x1, x2);
