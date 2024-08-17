@@ -5,10 +5,12 @@
 #include <ctype.h>
 
 
+enum cases {NONE_SOLUTIONS=-1, NO_SPECIAL_CASES=0, INFINITY_SOLUTIONS=1};
+
 struct Discriminant_and_imagine_units{
     float discriminant;
     int count_of_iu;
-    int is_square_state;
+    int is_equation_quadratic;
     int special_case;/*1 - there is infinity of solutions, -1 - there is no solutions, 0 - no special cases(1 or 2 solutions)*/
 };
 
@@ -49,7 +51,7 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
 }
 
 void print_solutions(struct Solution *decisions){
-    if (decisions[0].special_case == 0){
+    if (decisions[0].special_case == NO_SPECIAL_CASES){
         if (decisions[0].imagine_unit == 1){
             printf("Уравнение имеет два комплексных решения:\n");
             printf("x1 = %.8f + %.8fi\n", decisions[0].real_part, decisions[0].complex_part);
@@ -63,7 +65,7 @@ void print_solutions(struct Solution *decisions){
                 printf("x1 = %.8f\nx2 = %.8f\n", decisions[0].real_part, decisions[1].real_part);
             }
         }
-    } else if (decisions[0].special_case == -1){
+    } else if (decisions[0].special_case == NONE_SOLUTIONS){
         printf("Данное уравнение не имеет решений!\n");
     } else {
         printf("Данное уравнение имеет бесконечно много решений!\n");
@@ -72,7 +74,7 @@ void print_solutions(struct Solution *decisions){
 
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *element){
     if (coefficient_a != 0){
-        element->is_square_state = 1;
+        element->is_equation_quadratic = 1;
         float discr2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;/*Discriminant**2*/
         /*D[0] - discriminant, D[1] - count of imaginary units*/
         if (discr2 >= 0){/*There are real solutions*/
@@ -85,26 +87,26 @@ void find_discriminant(float coefficient_b, float coefficient_c, float coefficie
         }
     } else if (coefficient_b != 0){
         float solution = (-coefficient_c / coefficient_b);
-        element->is_square_state = 0;
+        element->is_equation_quadratic = 0;
         element->discriminant = solution;
         element->count_of_iu = 0;
     } else {
         if (coefficient_c != 0){
-           element->is_square_state = 0;
+           element->is_equation_quadratic = 0;
            element->discriminant = 0;
            element->count_of_iu = 0;
-           element->special_case = -1;/*no solutions*/
+           element->special_case = NONE_SOLUTIONS;/*no solutions*/
         } else {
-           element->is_square_state = 0;
+           element->is_equation_quadratic = 0;
            element->discriminant = 0;
            element->count_of_iu = 0;
-           element->special_case = 1;/*infinity of solutions*/
+           element->special_case = INFINITY_SOLUTIONS;/*infinity of solutions*/
         }
     }
 }
 
 void find_solutions(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *element, struct Solution *decisions){
-    if (element->is_square_state == 1){
+    if (element->is_equation_quadratic == 1){
         if (element->count_of_iu > 0){/*Complex solutions*/
             decisions[0].imagine_unit = 1;
             decisions[0].real_part = (-coefficient_b / (2 * coefficient_a));
@@ -138,18 +140,18 @@ void find_solutions(float coefficient_a, float coefficient_b, struct Discriminan
 
         }
     } else {
-        if (element->special_case == 0){
+        if (element->special_case == NO_SPECIAL_CASES){
             decisions[0].imagine_unit = 0;
             decisions[0].real_part = element->discriminant;
             decisions[0].complex_part = 0;
             decisions[0].is_solution = 1;
             decisions[1].is_solution = 0;
-        } else if (element->special_case == 1){
-            decisions[0].special_case = 1;
+        } else if (element->special_case == INFINITY_SOLUTIONS){
+            decisions[0].special_case = INFINITY_SOLUTIONS;
             decisions[0].is_solution = 1;
             decisions[1].is_solution = 0;
         } else {
-            decisions[0].special_case = -1;
+            decisions[0].special_case = NONE_SOLUTIONS;
             decisions[0].is_solution = 1;
             decisions[1].is_solution = 0;
         }
