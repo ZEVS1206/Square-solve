@@ -85,13 +85,22 @@ int comparison(float a, float b){
 
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c){
     printf("Введите коэффициент a:");
-    scanf("%f", coefficient_a);
+    while (scanf("%f", coefficient_a) != 1){
+        printf("Неверный ввод! Введите коэффициент а заново:");
+        scanf("%*s");
+    }
     printf("\n");
     printf("Введите коэффициент b:");
-    scanf("%f", coefficient_b);
+    while (scanf("%f", coefficient_b) != 1){
+        printf("Неверный ввод! Введите коэффициент b заново:");
+        scanf("%*s");
+    }
     printf("\n");
     printf("Введите коэффициент c:");
-    scanf("%f", coefficient_c);
+    while (scanf("%f", coefficient_c) != 1){
+        printf("Неверный ввод! Введите коэффициент c заново:");
+        scanf("%*s");
+    }
     printf("\n");
 }
 
