@@ -15,8 +15,6 @@ enum Case_of_solution
 struct Discriminant_and_imagine_units{
     float discriminant;
     bool is_complex;
-    //int is_equation_quadratic;
-    //int special_case;/*1 - there is infinity of solutions, -1 - there is no solutions, 0 - no special cases(1 or 2 solutions)*/
 };
 
 struct Complex_number{
@@ -32,14 +30,14 @@ struct Solutions {
 
 
 
-int check_type(float coefficient_a, float coefficient_b, float coefficient_c);
+//int check_type(float coefficient_a, float coefficient_b, float coefficient_c);
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c);/*enter the values*/
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
 void print_solutions(struct Solutions *);/*print the solutions*/
 void quadratic_equation(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *, struct Solutions *);
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
-void special_cases(int type, struct Solutions *);
+void special_cases(float coefficient_c, struct Solutions *);
 int comparison(float a, float b);
 
 int main(){
@@ -55,7 +53,7 @@ int main(){
     return 0;
 }
 
-int check_type(float coefficient_a, float coefficient_b, float coefficient_c){
+/*int check_type(float coefficient_a, float coefficient_b, float coefficient_c){
     int result = 0;
     if (comparison(coefficient_a, 0.0f) != 0){
         result = CASE_TWO_SOLUTIONS;
@@ -71,13 +69,13 @@ int check_type(float coefficient_a, float coefficient_b, float coefficient_c){
         }
     }
     return result;
-}
+}*/
 
 int comparison(float a, float b){
     float eps = 0.000001f;
-    if (b < (a - eps)){
+    if (b > a + eps){
         return -1;
-    } else if (b >= (a - eps) && b <= (a + eps)){
+    } else if (b <= (a + eps) && b >= (a - eps)){
         return 0;
     } else {
         return 1;
@@ -133,16 +131,19 @@ void find_discriminant(float coefficient_b, float coefficient_c, float coefficie
 }
 
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
-    int type = 0;
-    type = check_type(coefficient_a, coefficient_b, coefficient_c);
-    if (type == CASE_TWO_SOLUTIONS){
+    /*int type = 0;
+    type = check_type(coefficient_a, coefficient_b, coefficient_c);*/
+
+    if (comparison(coefficient_a, 0.0f) != 0){
         struct Discriminant_and_imagine_units element = {0};
         find_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);
-        quadratic_equation(coefficient_a, coefficient_b, &element, &(*solutions));
-    } else if (type == CASE_ONE_SOLUTION){
+        quadratic_equation(coefficient_a, coefficient_b, &element, solutions);
+    }
+    else if (comparison(coefficient_b, 0.0f) != 0){
         linear_equation(coefficient_b, coefficient_c, solutions);
-    } else {
-        special_cases(type, solutions);
+    }
+    else {
+        special_cases(coefficient_c, solutions);
     }
 }
 
@@ -179,14 +180,14 @@ void linear_equation(float coefficient_b, float coefficient_c, struct Solutions 
     if (comparison(coefficient_b, 0.0f) == 0){
         printf("Error: Данное уравнение не является линейным!\n");
     } else {
-        solutions->first_solution.real_part = (!comparison(coefficient_c,0)) ? ((-coefficient_c) / coefficient_b) : 0;
+        solutions->first_solution.real_part = (comparison(coefficient_c, 0) != 0) ? ((-coefficient_c) / coefficient_b) : 0;
         solutions->first_solution.complex_part = 0;
         solutions->special_cases = CASE_ONE_SOLUTION;
     }
 }
 
-void special_cases(int type, struct Solutions *solutions){
-    if (type == NONE_SOLUTIONS){
+void special_cases(float coefficient_c, struct Solutions *solutions){
+    if (comparison(coefficient_c, 0.0f) != 0){
         solutions->special_cases = NONE_SOLUTIONS;
     } else {
         solutions->special_cases = INFINITY_SOLUTIONS;
