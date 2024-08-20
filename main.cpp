@@ -84,21 +84,21 @@ int comparison(float a, float b){
 
 
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c){
-    printf("Введите коэффициент a:");
+    printf("Введи коэффициент a:");
     while (scanf("%f", coefficient_a) != 1){
-        printf("Неверный ввод! Введите коэффициент а заново:");
+        printf("Неверный ввод! Введи коэффициент а заново:");
         scanf("%*s");
     }
     printf("\n");
     printf("Введите коэффициент b:");
     while (scanf("%f", coefficient_b) != 1){
-        printf("Неверный ввод! Введите коэффициент b заново:");
+        printf("Неверный ввод! Введи коэффициент b заново:");
         scanf("%*s");
     }
     printf("\n");
     printf("Введите коэффициент c:");
     while (scanf("%f", coefficient_c) != 1){
-        printf("Неверный ввод! Введите коэффициент c заново:");
+        printf("Неверный ввод! Введи коэффициент c заново:");
         scanf("%*s");
     }
     printf("\n");
@@ -171,51 +171,54 @@ void quadratic_equation(float coefficient_a, float coefficient_b, float coeffici
     find_discriminant(coefficient_b, coefficient_c, coefficient_a, &Discriminant);
     if (comparison(coefficient_a, 0.0f) == 0){
         printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
-    } else {
-        solutions->special_cases = CASE_TWO_SOLUTIONS;
-        if (Discriminant.is_complex){/*Complex solutions*/
-            solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-            solutions->first_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
-            solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-            solutions->second_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
-        } else {/*Real Solutions*/
-            if (comparison(Discriminant.discriminant, 0.0f) == 0){
-                float x = (-coefficient_b) / (2 * coefficient_a);
-                solutions->first_solution.real_part = x;
-                solutions->first_solution.complex_part = 0;
-                solutions->special_cases = CASE_ONE_SOLUTION;
-            } else {
-                float x1 = 0.0f, x2 = 0.0f;
-                x1 = (-coefficient_b + Discriminant.discriminant) / (2 * coefficient_a);
-                x2 = (-coefficient_b - Discriminant.discriminant) / (2 * coefficient_a);
-                solutions->first_solution.real_part = x1;
-                solutions->first_solution.complex_part = 0;
-                solutions->second_solution.real_part = x2;
-                solutions->second_solution.complex_part = 0;
-            }
-        }
+        return;
     }
+
+    solutions->special_cases = CASE_TWO_SOLUTIONS;
+    if (Discriminant.is_complex){/*Complex solutions*/
+        solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
+        solutions->first_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
+        solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
+        solutions->second_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
+        return;
+    }/*Real Solutions*/
+
+    if (comparison(Discriminant.discriminant, 0.0f) == 0){
+        float x = (-coefficient_b) / (2 * coefficient_a);
+        solutions->first_solution.real_part = x;
+        solutions->first_solution.complex_part = 0;
+        solutions->special_cases = CASE_ONE_SOLUTION;
+    }
+    else {
+        float x1 = 0.0f, x2 = 0.0f;
+        x1 = (-coefficient_b + Discriminant.discriminant) / (2 * coefficient_a);
+        x2 = (-coefficient_b - Discriminant.discriminant) / (2 * coefficient_a);
+        solutions->first_solution.real_part = x1;
+        solutions->first_solution.complex_part = 0;
+        solutions->second_solution.real_part = x2;
+        solutions->second_solution.complex_part = 0;
+    }
+
 }
 
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);
+
     if (comparison(coefficient_b, 0.0f) == 0){
         printf("Error: Данное уравнение не является линейным!\n");
-    } else {
-        solutions->first_solution.real_part = (comparison(coefficient_c, 0) != 0) ? ((-coefficient_c) / coefficient_b) : 0;
-        solutions->first_solution.complex_part = 0;
-        solutions->special_cases = CASE_ONE_SOLUTION;
+        return;
     }
+    solutions->first_solution.real_part = (comparison(coefficient_c, 0) != 0) ? ((-coefficient_c) / coefficient_b) : 0;
+    solutions->first_solution.complex_part = 0;
+    solutions->special_cases = CASE_ONE_SOLUTION;
 }
 
 void special_cases(float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);
+
     if (comparison(coefficient_c, 0.0f) != 0){
         solutions->special_cases = NONE_SOLUTIONS;
     } else {
         solutions->special_cases = INFINITY_SOLUTIONS;
     }
 }
-
-
-
