@@ -35,7 +35,7 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
 void print_solutions(struct Solutions *);/*print the solutions*/
-void quadratic_equation(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *, struct Solutions *);
+void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
 void special_cases(float coefficient_c, struct Solutions *);
 int comparison(float a, float b);
@@ -85,37 +85,46 @@ int comparison(float a, float b){
 
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c){
     printf("Введите коэффициент a:");
-    scanf("%f", &(*coefficient_a));
+    scanf("%f", coefficient_a);
     printf("\n");
     printf("Введите коэффициент b:");
-    scanf("%f", &(*coefficient_b));
+    scanf("%f", coefficient_b);
     printf("\n");
     printf("Введите коэффициент c:");
-    scanf("%f", &(*coefficient_c));
+    scanf("%f", coefficient_c);
     printf("\n");
 }
 
 void print_solutions(struct Solutions *solutions){
-    if (solutions->special_cases == CASE_TWO_SOLUTIONS){
-        if (comparison(solutions->first_solution.complex_part, 0.0f) != 0){
-            printf("Уравнение имеет два комплексных решения:\n");
-            printf("x1 = %.8f + %.8fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
-            printf("x2 = %.8f - %.8fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
-        } else {
-            printf("Уравнение имеет два действительных решения:\n");
-            printf("x1 = %.8f\nx2 = %.8f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
-        }
-    }else if (solutions->special_cases == CASE_ONE_SOLUTION){
-        printf("Уравнение имеет единственное действительное решение:\n");
-        printf("x = %.8f\n", solutions->first_solution.real_part);
-    } else if (solutions->special_cases == NONE_SOLUTIONS){
-        printf("Данное уравнение не имеет решений!\n");
-    } else {
-        printf("Данное уравнение имеет бесконечно много решений!\n");
+    switch (solutions->special_cases){
+        case CASE_TWO_SOLUTIONS:
+            if (comparison(solutions->first_solution.complex_part, 0.0f) != 0){
+                printf("Уравнение имеет два комплексных решения:\n");
+                printf("x1 = %.8f + %.8fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
+                printf("x2 = %.8f - %.8fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
+            } else {
+                printf("Уравнение имеет два действительных решения:\n");
+                printf("x1 = %.8f\nx2 = %.8f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
+            }
+            break;
+        case CASE_ONE_SOLUTION:
+            printf("Уравнение имеет единственное действительное решение:\n");
+            printf("x = %.8f\n", solutions->first_solution.real_part);
+            break;
+        case NONE_SOLUTIONS:
+            printf("Данное уравнение не имеет решений!\n");
+            break;
+        case INFINITY_SOLUTIONS:
+            printf("Данное уравнение имеет бесконечно много решений!\n");
+            break;
+        default:
+            printf("Error: Неизвестный случай!\n");
+            break;
     }
 }
 
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *element){
+
     if (comparison(coefficient_a, 0.0f) == 0){
         printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
     } else {
@@ -133,11 +142,8 @@ void find_discriminant(float coefficient_b, float coefficient_c, float coefficie
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
     /*int type = 0;
     type = check_type(coefficient_a, coefficient_b, coefficient_c);*/
-
     if (comparison(coefficient_a, 0.0f) != 0){
-        struct Discriminant_and_imagine_units element = {0};
-        find_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);
-        quadratic_equation(coefficient_a, coefficient_b, &element, solutions);
+        quadratic_equation(coefficient_a, coefficient_b, coefficient_c, solutions);
     }
     else if (comparison(coefficient_b, 0.0f) != 0){
         linear_equation(coefficient_b, coefficient_c, solutions);
@@ -147,26 +153,28 @@ void find_solutions(float coefficient_a, float coefficient_b, float coefficient_
     }
 }
 
-void quadratic_equation(float coefficient_a, float coefficient_b, struct Discriminant_and_imagine_units *element, struct Solutions *solutions){
+void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
+    struct Discriminant_and_imagine_units element = {0};
+    find_discriminant(coefficient_b, coefficient_c, coefficient_a, &element);
     if (comparison(coefficient_a, 0.0f) == 0){
         printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
     } else {
         solutions->special_cases = CASE_TWO_SOLUTIONS;
-        if (element->is_complex){/*Complex solutions*/
+        if (element.is_complex){/*Complex solutions*/
             solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-            solutions->first_solution.complex_part = (element->discriminant / (2 * coefficient_a));
+            solutions->first_solution.complex_part = (element.discriminant / (2 * coefficient_a));
             solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-            solutions->second_solution.complex_part = (element->discriminant / (2 * coefficient_a));
+            solutions->second_solution.complex_part = (element.discriminant / (2 * coefficient_a));
         } else {/*Real Solutions*/
-            if (comparison(element->discriminant, 0.0f) == 0){
+            if (comparison(element.discriminant, 0.0f) == 0){
                 float x = (-coefficient_b) / (2 * coefficient_a);
                 solutions->first_solution.real_part = x;
                 solutions->first_solution.complex_part = 0;
                 solutions->special_cases = CASE_ONE_SOLUTION;
             } else {
                 float x1 = 0.0f, x2 = 0.0f;
-                x1 = (-coefficient_b + element->discriminant) / (2 * coefficient_a);
-                x2 = (-coefficient_b - element->discriminant) / (2 * coefficient_a);
+                x1 = (-coefficient_b + element.discriminant) / (2 * coefficient_a);
+                x2 = (-coefficient_b - element.discriminant) / (2 * coefficient_a);
                 solutions->first_solution.real_part = x1;
                 solutions->first_solution.complex_part = 0;
                 solutions->second_solution.real_part = x2;
