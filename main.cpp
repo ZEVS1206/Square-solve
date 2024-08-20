@@ -27,8 +27,7 @@ struct Complex_number{
 struct Solution {
     Complex_number first_solution;
     Complex_number second_solution;
-    int quantity_of_solutions;
-    int special_cases;
+    Cases_of_solution special_cases;
 };
 
 
@@ -153,7 +152,6 @@ void quadratic_equation(float coefficient_a, float coefficient_b, struct Discrim
             solutions->first_solution.complex_part = (element->discriminant / (2 * coefficient_a));
             solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
             solutions->second_solution.complex_part = (element->discriminant / (2 * coefficient_a));
-            solutions->quantity_of_solutions = 2;
         } else {/*Real Solutions*/
             if (comparison(element->discriminant, 0.0f)){
                 float x = (-coefficient_b) / (2 * coefficient_a);
@@ -168,7 +166,6 @@ void quadratic_equation(float coefficient_a, float coefficient_b, struct Discrim
                 solutions->first_solution.complex_part = 0;
                 solutions->second_solution.real_part = x2;
                 solutions->second_solution.complex_part = 0;
-                solutions->quantity_of_solutions = 2;
             }
         }
     }
