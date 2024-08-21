@@ -88,35 +88,24 @@ int comparison(float a, float b){
 }
 
 int input_check(float *coefficient){
-    const int BUFSIZE = 3;
+    const int BUFSIZE = 100;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
     int i = 0;
-    int c = getchar();
-    while (i < BUFSIZE - 1 && c != EOF && c != '\n'){
+    int c;
+    while (i < BUFSIZE && (c = getchar()) != EOF && c != '\n'){
         bufer[i] = c;
-        c = getchar();
         i++;
     }
-    if (i < BUFSIZE && c == '\n'){
-        bufer[i] = '\n';
-        i++;
-    } else {
-        return 1;
-    }
-    bufer[i] = '\0';
-    int len = strlen(bufer);
-    if (bufer[len - 1] == '\n'){
-        bufer[len - 1] = '\0';
+    if (c == '\n'){
+        bufer[i] = '\0';
         *coefficient = strtof(bufer, &end);
         if (*end != '\0'){
+            while(getchar() != '\n');
             return 1;
         }
     } else {
-        scanf("%*s");
-        return 1;
-    }
-    if (len == 0){
+        while(getchar() != '\n');
         return 1;
     }
     return 0;
