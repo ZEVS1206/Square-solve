@@ -33,6 +33,7 @@ struct Solutions {
 
 //int check_type(float coefficient_a, float coefficient_b, float coefficient_c);
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c);/*enter the values*/
+int input_check(float *coefficient);
 void input(float *coefficient, char position);
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
@@ -86,14 +87,37 @@ int comparison(float a, float b){
     }
 }
 
-void input(float *coefficient, char position){
-    printf("Введи коэффициент %c:", position);
-    int in = scanf("%f", coefficient);
-    while (in != 1){
-        printf("Повторите ввод коэффициента %c:", position);
+int input_check(float *coefficient){
+    const int BUFSIZE = 100;
+    char *end = NULL;
+    char bufer[BUFSIZE] = {};
+    fgets(bufer, BUFSIZE, stdin);
+    int len = strlen(bufer);
+    if (bufer[len - 1] == '\n'){
+        bufer[len - 1] = '\0';
+        *coefficient = strtof(bufer, &end);
+        if (*end != '\0'){
+            return 1;
+        }
+    } else {
         scanf("%*s");
-        in = scanf("%f", coefficient);
+        return 1;
     }
+    if (len == 0){
+        return 1;
+    }
+    return 0;
+}
+
+void input(float *coefficient, char position){
+    printf("Введите коэффициент %c:", position);
+    int status = 0;
+    do {
+        status = input_check(coefficient);
+        if (status != 0){
+            printf("Неверный ввод! Введите коэффициент %c:", position);
+        }
+    } while (status != 0);
 }
 
 
@@ -228,4 +252,3 @@ void special_cases(float coefficient_c, struct Solutions *solutions){
         solutions->special_cases = INFINITY_SOLUTIONS;
     }
 }
-
