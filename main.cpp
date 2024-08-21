@@ -38,6 +38,8 @@ void find_discriminant(float coefficient_b, float coefficient_c, float coefficie
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
 void print_solutions(struct Solutions *);/*print the solutions*/
 void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);
+void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
+void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
 void special_cases(float coefficient_c, struct Solutions *);
 int comparison(float a, float b);
@@ -86,9 +88,11 @@ int comparison(float a, float b){
 
 void input(float *coefficient, char position){
     printf("Введи коэффициент %c:", position);
-    while (scanf("%f", coefficient) != 1){
-        printf("Неверный ввод! Введи коэффициент %c заново:", position);
+    int in = scanf("%f", coefficient);
+    while (in != 1){
+        printf("Повторите ввод коэффициента %c:", position);
         scanf("%*s");
+        in = scanf("%f", coefficient);
     }
 }
 
@@ -170,15 +174,15 @@ void quadratic_equation(float coefficient_a, float coefficient_b, float coeffici
     }
 
     if (Discriminant.is_complex){/*Complex solutions*/
-        solutions->special_cases = CASE_TWO_SOLUTIONS_COMPLEX;
-        solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-        solutions->first_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
-        solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
-        solutions->second_solution.complex_part = (Discriminant.discriminant / (2 * coefficient_a));
+        find_complex_solutions(coefficient_a, coefficient_b, Discriminant.discriminant, solutions);
         return;
-    }/*Real Solutions*/
+    }
+    find_real_solutions(coefficient_a, coefficient_b, Discriminant.discriminant, solutions);
 
-    if (comparison(Discriminant.discriminant, 0.0f) == 0){
+}
+
+void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
+    if (comparison(discriminant, 0.0f) == 0){
         float x = (-coefficient_b) / (2 * coefficient_a);
         solutions->first_solution.real_part = x;
         solutions->first_solution.complex_part = 0;
@@ -187,13 +191,20 @@ void quadratic_equation(float coefficient_a, float coefficient_b, float coeffici
     }
     solutions->special_cases = CASE_TWO_SOLUTIONS_REAL;
     float x1 = 0.0f, x2 = 0.0f;
-    x1 = (-coefficient_b + Discriminant.discriminant) / (2 * coefficient_a);
-    x2 = (-coefficient_b - Discriminant.discriminant) / (2 * coefficient_a);
+    x1 = (-coefficient_b + discriminant) / (2 * coefficient_a);
+    x2 = (-coefficient_b - discriminant) / (2 * coefficient_a);
     solutions->first_solution.real_part = x1;
     solutions->first_solution.complex_part = 0;
     solutions->second_solution.real_part = x2;
     solutions->second_solution.complex_part = 0;
+}
 
+void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
+    solutions->special_cases = CASE_TWO_SOLUTIONS_COMPLEX;
+    solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
+    solutions->first_solution.complex_part = (discriminant / (2 * coefficient_a));
+    solutions->second_solution.real_part = (-coefficient_b / (2 * coefficient_a));
+    solutions->second_solution.complex_part = (discriminant / (2 * coefficient_a));
 }
 
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *solutions){
@@ -217,3 +228,4 @@ void special_cases(float coefficient_c, struct Solutions *solutions){
         solutions->special_cases = INFINITY_SOLUTIONS;
     }
 }
+
