@@ -88,16 +88,35 @@ int comparison(float a, float b){
 }
 
 int input_check(float *coefficient){
-    const int BUFSIZE = 100;
+    const int BUFSIZE = 10;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
     int i = 0;
-    int c;
-    while (i < BUFSIZE && (c = getchar()) != EOF && c != '\n'){
-        bufer[i] = c;
-        i++;
+    int c = getchar();
+    while (c != '\n' && isspace(c)){
+        c = getchar();
     }
-    if (c == '\n'){
+    bool flag = false;
+    while (i < BUFSIZE && c != EOF && c != '\n'){
+        if (isspace(c)){
+            flag = true;
+        } else {
+            flag = false;
+        }
+        if (!flag){
+            bufer[i] = c;
+            i++;
+        }
+        c = getchar();
+    }
+
+    if (c == EOF || (c == '\n' && i == 0)){
+        return 3;
+    }
+    if (c == '\n' || flag){
+        if (flag){
+            while(getchar() != '\n');
+        }
         bufer[i] = '\0';
         *coefficient = strtof(bufer, &end);
         if (*end != '\0'){
@@ -105,7 +124,7 @@ int input_check(float *coefficient){
         }
     } else {
         while(getchar() != '\n');
-        return 1;
+        return 2;
     }
     return 0;
 }
@@ -115,8 +134,12 @@ void input(float *coefficient, char position){
     int status = 0;
     do {
         status = input_check(coefficient);
-        if (status != 0){
+        if (status == 1){
             printf("Неверный ввод! Введите коэффициент %c:", position);
+        } else if (status == 2){
+            printf("Переполнение буфера ввода! Повторите ввод коэффициента %c: ", position);
+        } else if (status == 3) {
+            printf("Вы ничего не ввели! Повторите ввод коэффициента %c: ", position);
         }
     } while (status != 0);
 }
