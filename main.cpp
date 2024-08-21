@@ -101,7 +101,6 @@ int input_check(float *coefficient){
         bufer[i] = '\0';
         *coefficient = strtof(bufer, &end);
         if (*end != '\0'){
-            while(getchar() != '\n');
             return 1;
         }
     } else {
