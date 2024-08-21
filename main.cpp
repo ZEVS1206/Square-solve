@@ -88,10 +88,23 @@ int comparison(float a, float b){
 }
 
 int input_check(float *coefficient){
-    const int BUFSIZE = 100;
+    const int BUFSIZE = 3;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
-    fgets(bufer, BUFSIZE, stdin);
+    int i = 0;
+    int c = getchar();
+    while (i < BUFSIZE - 1 && c != EOF && c != '\n'){
+        bufer[i] = c;
+        c = getchar();
+        i++;
+    }
+    if (i < BUFSIZE && c == '\n'){
+        bufer[i] = '\n';
+        i++;
+    } else {
+        return 1;
+    }
+    bufer[i] = '\0';
     int len = strlen(bufer);
     if (bufer[len - 1] == '\n'){
         bufer[len - 1] = '\0';
@@ -125,6 +138,7 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
     input(coefficient_a, 'a');
     input(coefficient_b, 'b');
     input(coefficient_c, 'c');
+    printf("%f %f %f\n", *coefficient_a, *coefficient_b, *coefficient_c);
 }
 
 void print_solutions(struct Solutions *solutions){
