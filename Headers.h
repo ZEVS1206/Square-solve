@@ -1,5 +1,5 @@
 //#define TEST
-#define USUAL
+//#define USUAL
 #include "Colours.h"
 
 void test_programm(void);
