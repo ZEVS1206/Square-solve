@@ -273,7 +273,7 @@ static void quadratic_equation(float coefficient_a, float coefficient_b, float c
 
 static void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
     if (comparison(discriminant, 0.0f) == 0){
-        float x = (-coefficient_b) / (2 * coefficient_a);
+        float x = ((comparison(coefficient_b, 0.0f)) == 0) ? 0 : (-coefficient_b) / (2 * coefficient_a);
         solutions->first_solution.real_part = x;
         solutions->first_solution.complex_part = 0;
         solutions->second_solution.real_part = 0;
@@ -307,7 +307,7 @@ static void linear_equation(float coefficient_b, float coefficient_c, struct Sol
         printf("Error: Данное уравнение не является линейным!\n");
         return;
     }
-    solutions->first_solution.real_part = (comparison(coefficient_c, 0) != 0) ? ((-coefficient_c) / coefficient_b) : 0;
+    solutions->first_solution.real_part = (comparison(coefficient_c, 0.0f) != 0) ? ((-coefficient_c) / coefficient_b) : 0;
     solutions->first_solution.complex_part = 0;
     solutions->special_cases = CASE_ONE_SOLUTION;
 }
