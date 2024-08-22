@@ -1,4 +1,5 @@
 #define TEST
+#include "Colours.h"
 
 void test_programm(void);
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c);/*enter the values*/
@@ -10,6 +11,8 @@ struct Complex_number {
     float complex_part;
 };
 
+// printfRed, printfGreen
+//define FUNC(...) __VA_ARGS__
 enum Case_of_solution
 {
     NONE_SOLUTIONS             = -2,

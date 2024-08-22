@@ -15,18 +15,18 @@ enum Case_of_input
 };
 
 
-Case_of_input input_check(float *coefficient);
-void input(float *coefficient, char position);
-void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
-void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);
-void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
-void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
-void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
-void special_cases(float coefficient_c, struct Solutions *);
-int comparison(float a, float b);
-void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *, const struct Test_solutions *);
-void testing_values(struct Test_solutions *, const int quantity_of_tests);
-int get_verdict(struct Solutions *, const struct Test_solutions *);
+static Case_of_input input_check(float *coefficient);
+static void input(float *coefficient, char position);
+static void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
+static void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);
+static void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
+static void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
+static void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
+static void special_cases(float coefficient_c, struct Solutions *);
+static int comparison(float a, float b);
+static void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *, const struct Test_solutions *);
+static void testing_values(struct Test_solutions *, const int quantity_of_tests);
+static int get_verdict(struct Solutions *, const struct Test_solutions *);
 
 
 struct Discriminant_and_imagine_units {
@@ -46,7 +46,7 @@ struct Test_solutions {
 
 void test_programm(void){
     struct Test_solutions test_solutions[] = {
-    /*#1*/1.0f,   0.0f,  -1.0f,  1.0f,      0.0f, -1.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
+    /*#1*/1.0f,   0.0f,  -1.0f,  1.0f,      0.0f, 1.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
     /*#2*/1.0f,   0.0f,  -4.0f,  2.0f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
     /*#3*/5.0f,   12.0f,  4.0f, -0.4f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
     /*#4*/-1.0f,  4.0f,  -3.0f,  1.0f,      0.0f,  3.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
@@ -72,7 +72,7 @@ void test_programm(void){
 }
 
 
-void testing_values(struct Test_solutions *test_solutions, const int quantity_of_tests){
+static void testing_values(struct Test_solutions *test_solutions, const int quantity_of_tests){
     int i = 0;
     int verdict = 0;
     while (i < quantity_of_tests){
@@ -85,7 +85,7 @@ void testing_values(struct Test_solutions *test_solutions, const int quantity_of
 }
 
 
-int get_verdict(struct Solutions *solutions, const struct Test_solutions *test_solution){
+static int get_verdict(struct Solutions *solutions, const struct Test_solutions *test_solution){
     find_solutions(test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c, solutions);
     if (solutions->special_cases == test_solution->special_cases
         && (comparison(test_solution->first_solution.real_part, solutions->first_solution.real_part) == 0
@@ -99,11 +99,11 @@ int get_verdict(struct Solutions *solutions, const struct Test_solutions *test_s
 }
 
 
-void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *solutions, const struct Test_solutions *test_solution){
+static void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *solutions, const struct Test_solutions *test_solution){
     if (verdict == 0){
-        printf("Тест %d успешно пройден!\n", number_of_test);
+        printfGreen("Тест %d успешно пройден!\n", number_of_test);
     } else {
-        printf("Тест %d не пройден!\n", number_of_test);
+        printfRed("Тест %d не пройден!\n", number_of_test);
         printf("Здесь данные коэффициенты:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c);
         printf("Вот верный ответ:\n");
         struct Solutions test = {0};
@@ -120,7 +120,7 @@ void print_result_of_testing(int number_of_test, int verdict, const struct Solut
 }
 
 
-int comparison(float a, float b){
+static int comparison(float a, float b){
     float eps = 1e-6f;
     if (b >= a + eps){
         return -1;
@@ -131,7 +131,7 @@ int comparison(float a, float b){
     }
 }
 
-Case_of_input input_check(float *coefficient){
+static Case_of_input input_check(float *coefficient){
     const int BUFSIZE = 10;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
@@ -174,7 +174,7 @@ Case_of_input input_check(float *coefficient){
 }
 
 
-void input(float *coefficient, char position){
+static void input(float *coefficient, char position){
     printf("Введите коэффициент %c:", position);
     Case_of_input status = NO_PROBLEMS;
     do {
@@ -226,7 +226,7 @@ void print_solutions(const struct Solutions *solutions){
 }
 
 
-void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *Discriminant){
+static void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *Discriminant){
     assert(Discriminant != NULL);
     if (comparison(coefficient_a, 0.0f) == 0){
         printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
@@ -254,7 +254,7 @@ void find_solutions(float coefficient_a, float coefficient_b, float coefficient_
     }
 }
 
-void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
+static void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);
     struct Discriminant_and_imagine_units Discriminant = {0};
     find_discriminant(coefficient_b, coefficient_c, coefficient_a, &Discriminant);
@@ -271,7 +271,7 @@ void quadratic_equation(float coefficient_a, float coefficient_b, float coeffici
 
 }
 
-void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
+static void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
     if (comparison(discriminant, 0.0f) == 0){
         float x = (-coefficient_b) / (2 * coefficient_a);
         solutions->first_solution.real_part = x;
@@ -292,7 +292,7 @@ void find_real_solutions(float coefficient_a, float coefficient_b, float discrim
     solutions->second_solution.complex_part = 0;
 }
 
-void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
+static void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *solutions){
     solutions->special_cases = CASE_TWO_SOLUTIONS_COMPLEX;
     solutions->first_solution.real_part = (-coefficient_b / (2 * coefficient_a));
     solutions->first_solution.complex_part = (discriminant / (2 * coefficient_a));
@@ -300,7 +300,7 @@ void find_complex_solutions(float coefficient_a, float coefficient_b, float disc
     solutions->second_solution.complex_part = (discriminant / (2 * coefficient_a));
 }
 
-void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *solutions){
+static void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);
 
     if (comparison(coefficient_b, 0.0f) == 0){
@@ -312,7 +312,7 @@ void linear_equation(float coefficient_b, float coefficient_c, struct Solutions 
     solutions->special_cases = CASE_ONE_SOLUTION;
 }
 
-void special_cases(float coefficient_c, struct Solutions *solutions){
+static void special_cases(float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);
 
     if (comparison(coefficient_c, 0.0f) != 0){
