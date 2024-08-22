@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctype.h>
 
+
 enum Case_of_solution
 {
     NONE_SOLUTIONS             = -2,
@@ -11,6 +12,14 @@ enum Case_of_solution
     CASE_TWO_SOLUTIONS_REAL    =  0,
     CASE_TWO_SOLUTIONS_COMPLEX =  1,
     INFINITY_SOLUTIONS         =  2
+};
+
+enum Case_of_input
+{
+    NO_PROBLEMS         = 0,
+    INCORRECT_INPUT     = 1,
+    PROBLEM_OF_OVERFLOW = 2,
+    PROBLEM_OF_NO_INPUT = 3
 };
 
 struct Discriminant_and_imagine_units {
@@ -39,90 +48,97 @@ struct Test_solutions {
 };
 
 
-
-
-
+void test_programm(void);
 void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c);/*enter the values*/
-int input_check(float *coefficient);
+Case_of_input input_check(float *coefficient);
 void input(float *coefficient, char position);
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *);/*discriminant*/
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
-void print_solutions(struct Solutions *);/*print the solutions*/
+void print_solutions(const struct Solutions *);/*print the solutions*/
 void quadratic_equation(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);
 void find_real_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
 void find_complex_solutions(float coefficient_a, float coefficient_b, float discriminant, struct Solutions *);
 void linear_equation(float coefficient_b, float coefficient_c, struct Solutions *);
 void special_cases(float coefficient_c, struct Solutions *);
 int comparison(float a, float b);
-void testing_values(struct Solutions *, struct Test_solutions *, const int quantity_of_tests);
-int get_verdict(struct Solutions *, struct Test_solutions *);
-void print_result_of_testing(int number_of_test, int verdict, struct Solutions *, struct Test_solutions *);
+void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *, const struct Test_solutions *);
+void testing_values(struct Test_solutions *, const int quantity_of_tests);
+int get_verdict(struct Solutions *, const struct Test_solutions *);
 
-
+#define TEST
 
 int main(){
-    float coefficient_a = 0.0f;
-    float coefficient_b = 0.0f;
-    float coefficient_c = 0.0f;
-    const int quantity_of_tests = 13;
-    struct Test_solutions test_solutions[quantity_of_tests] = {
-    1.0f,   0.0f,   -1.0f,   1.0f,      0.0f, -1.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
-    1.0f,   0.0f,   -4.0f,   2.0f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
-    5.0f,   12.0f,   4.0f,  -0.4f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
-   -1.0f,   4.0f,   -3.0f,   1.0f,      0.0f,  3.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
-   -1.232f, 4.324f, -2.324f, 0.662531f, 0.0f,  2.84721f, 0.0f, CASE_TWO_SOLUTIONS_REAL,
 
-
-    1.0f, 1.0f, 1.0f, -0.5f, (sqrt(3) / 2.0f), -0.5f, (sqrt(3) / 2.0f), CASE_TWO_SOLUTIONS_COMPLEX,
-    1.0f, 2.0f, 3.0f, -1.0f,  sqrt(2),          1.0f,  sqrt(2),         CASE_TWO_SOLUTIONS_COMPLEX,
-
-
-    1.0f, 0.0f, 0.0f, 0.0f,          0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
-    0.0f,-2.0f, 3.0f, 1.5f,          0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
-    0.0f,-1.5f, 1.0f, (2.0f / 3.0f), 0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
-
-
-    0.0f, 0.0f, 28.0f, 0.0f, 0.0f, 0.0f, 0.0f, NONE_SOLUTIONS,
-    0.0f, 0.0f,-12.0f, 0.0f, 0.0f, 0.0f, 0.0f, NONE_SOLUTIONS,
-
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, INFINITY_SOLUTIONS
-    };
-
-    //enter_coefficients(&coefficient_a, &coefficient_b, &coefficient_c);
-
-    struct Solutions solutions = {0};
-    testing_values(&solutions, test_solutions, quantity_of_tests);
-    find_solutions(coefficient_a, coefficient_b, coefficient_c, &solutions);
-
-    //print_solutions(&solutions);
+    #if defined(TEST)
+        test_programm();
+    #else
+        float coefficient_a = 0.0f;
+        float coefficient_b = 0.0f;
+        float coefficient_c = 0.0f;
+        enter_coefficients(&coefficient_a, &coefficient_b, &coefficient_c);
+        struct Solutions solutions = {0};
+        find_solutions(coefficient_a, coefficient_b, coefficient_c, &solutions);
+        print_solutions(&solutions);
+    #endif
     return 0;
 }
 
-void testing_values(struct Solutions *solutions, struct Test_solutions *test_solutions, const int quantity_of_tests){
+void test_programm(void){
+    struct Test_solutions test_solutions[] = {
+    /*#1*/1.0f,   0.0f,  -1.0f,  1.0f,      0.0f, -1.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
+    /*#2*/1.0f,   0.0f,  -4.0f,  2.0f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
+    /*#3*/5.0f,   12.0f,  4.0f, -0.4f,      0.0f, -2.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
+    /*#4*/-1.0f,  4.0f,  -3.0f,  1.0f,      0.0f,  3.0f,     0.0f, CASE_TWO_SOLUTIONS_REAL,
+    /*#5*/-1.232f,4.324f,-2.324f,0.662531f, 0.0f,  2.847209f, 0.0f, CASE_TWO_SOLUTIONS_REAL,
+
+
+    /*#6*/1.0f, 1.0f, 1.0f, -0.5f, (sqrtf(3) / 2.0f), -0.5f, (sqrtf(3) / 2.0f), CASE_TWO_SOLUTIONS_COMPLEX,
+    /*#7*/1.0f, 2.0f, 3.0f, -1.0f,  sqrtf(2),         -1.0f,  sqrtf(2),         CASE_TWO_SOLUTIONS_COMPLEX,
+
+
+    /*#8*/ 1.0f, 0.0f, 0.0f, 0.0f,          0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
+    /*#9*/ 0.0f,-2.0f, 3.0f, 1.5f,          0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
+    /*#10*/0.0f,-1.5f, 1.0f, (2.0f / 3.0f), 0.0f,    0.0f, 0.0f, CASE_ONE_SOLUTION,
+
+
+    /*#11*/0.0f, 0.0f, 28.0f, 0.0f, 0.0f, 0.0f, 0.0f, NONE_SOLUTIONS,
+    /*#12*/0.0f, 0.0f,-12.0f, 0.0f, 0.0f, 0.0f, 0.0f, NONE_SOLUTIONS,
+
+    /*#13*/0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, INFINITY_SOLUTIONS
+    };
+    const size_t quantity_of_tests = sizeof(test_solutions) / sizeof(Test_solutions);
+    testing_values(test_solutions, quantity_of_tests);
+}
+
+
+void testing_values(struct Test_solutions *test_solutions, const int quantity_of_tests){
     int i = 0;
     int verdict = 0;
     while (i < quantity_of_tests){
-        verdict = get_verdict(solutions, &test_solutions[i]);
-        print_result_of_testing(i + 1, verdict, solutions, &test_solutions[i]);
+        struct Solutions solutions = {0};
+        verdict = get_verdict(&solutions, &test_solutions[i]);
+        //printf("Test %d. Verdict %d\n", i+1, verdict);
+        print_result_of_testing(i + 1, verdict, &solutions, &test_solutions[i]);
         i++;
     }
 }
 
 
-int get_verdict(struct Solutions *solutions, struct Test_solutions *test_solution){
+int get_verdict(struct Solutions *solutions, const struct Test_solutions *test_solution){
     find_solutions(test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c, solutions);
     if (solutions->special_cases == test_solution->special_cases
-    && (comparison(solutions->first_solution.real_part, test_solution->first_solution.real_part) == 0
-    && comparison(solutions->second_solution.real_part, test_solution->second_solution.real_part) == 0
-    && comparison(solutions->first_solution.complex_part, test_solution->first_solution.complex_part) == 0
-    && comparison(solutions->second_solution.complex_part, test_solution->second_solution.complex_part) == 0)){
+        && (comparison(test_solution->first_solution.real_part, solutions->first_solution.real_part) == 0
+        && comparison(test_solution->second_solution.real_part, solutions->second_solution.real_part) == 0
+        && comparison(test_solution->first_solution.complex_part, solutions->first_solution.complex_part) == 0
+        && comparison(test_solution->second_solution.complex_part, solutions->second_solution.complex_part) == 0)){
         return 0;
     } else {
         return 1;
     }
 }
 
-void print_resulting_of_testing(int number_of_test, int verdict, struct Solutions *solutions, struct Test_solutions *test_solution){
+
+void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *solutions, const struct Test_solutions *test_solution){
     if (verdict == 0){
         printf("Тест %d успешно пройден!\n", number_of_test);
     } else {
@@ -134,32 +150,27 @@ void print_resulting_of_testing(int number_of_test, int verdict, struct Solution
         test.second_solution.real_part = solutions->second_solution.real_part;
         test.first_solution.complex_part = solutions->first_solution.complex_part;
         test.second_solution.complex_part = solutions->second_solution.complex_part;
+        test.special_cases = solutions->special_cases;
         print_solutions(&test);
         printf("\nВот ваш ответ:\n");
         print_solutions(solutions);
+        printf("\n");
     }
 }
 
 
-
-
-
-
-
-
-
 int comparison(float a, float b){
-    float eps = 1e-8f;
-    if (b > a + eps){
+    float eps = 1e-6f;
+    if (b >= a + eps){
         return -1;
-    } else if (b <= (a + eps) && b >= (a - eps)){
+    } else if (b < (a + eps) && b > (a - eps)){
         return 0;
     } else {
         return 1;
     }
 }
 
-int input_check(float *coefficient){
+Case_of_input input_check(float *coefficient){
     const int BUFSIZE = 10;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
@@ -183,7 +194,7 @@ int input_check(float *coefficient){
     }
 
     if (c == EOF || (c == '\n' && i == 0)){
-        return 3;
+        return PROBLEM_OF_NO_INPUT;
     }
     if (c == '\n' || flag){
         if (flag){
@@ -192,28 +203,29 @@ int input_check(float *coefficient){
         bufer[i] = '\0';
         *coefficient = strtof(bufer, &end);
         if (*end != '\0'){
-            return 1;
+            return INCORRECT_INPUT;
         }
     } else {
         while(getchar() != '\n');
-        return 2;
+        return PROBLEM_OF_OVERFLOW;
     }
-    return 0;
+    return NO_PROBLEMS;
 }
 
+// fix status to enum
 void input(float *coefficient, char position){
     printf("Введите коэффициент %c:", position);
-    int status = 0;
+    Case_of_input status = NO_PROBLEMS;
     do {
         status = input_check(coefficient);
-        if (status == 1){
+        if (status == INCORRECT_INPUT){
             printf("Неверный ввод! Введите коэффициент %c:", position);
-        } else if (status == 2){
+        } else if (status == PROBLEM_OF_OVERFLOW){
             printf("Переполнение буфера ввода! Повторите ввод коэффициента %c: ", position);
-        } else if (status == 3) {
+        } else if (status == PROBLEM_OF_NO_INPUT) {
             printf("Вы ничего не ввели! Повторите ввод коэффициента %c: ", position);
         }
-    } while (status != 0);
+    } while (status != NO_PROBLEMS);
 }
 
 
@@ -224,20 +236,21 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
     //printf("%f %f %f\n", *coefficient_a, *coefficient_b, *coefficient_c);
 }
 
-void print_solutions(struct Solutions *solutions){
+
+void print_solutions(const struct Solutions *solutions){
     switch (solutions->special_cases){
         case CASE_TWO_SOLUTIONS_COMPLEX:
             //printf("Уравнение имеет два комплексных решения:\n");
-            printf("x1 = %.8f + %.8fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
-            printf("x2 = %.8f - %.8fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
+            printf("x1 = %.6f + %.6fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
+            printf("x2 = %.6f - %.6fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
             break;
         case CASE_TWO_SOLUTIONS_REAL:
             //printf("Уравнение имеет два действительных решения:\n");
-            printf("x1 = %.8f\nx2 = %.8f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
+            printf("x1 = %.6f\nx2 = %.6f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
             break;
         case CASE_ONE_SOLUTION:
             //printf("Уравнение имеет единственное действительное решение:\n");
-            printf("x = %.8f\n", solutions->first_solution.real_part);
+            printf("x = %.6f\n", solutions->first_solution.real_part);
             break;
         case NONE_SOLUTIONS:
             printf("Данное уравнение не имеет решений!\n");
@@ -251,21 +264,16 @@ void print_solutions(struct Solutions *solutions){
     }
 }
 
+
 void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *Discriminant){
     assert(Discriminant != NULL);
     if (comparison(coefficient_a, 0.0f) == 0){
         printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
         return;
     }
-
     float discriminant2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;
-    if (comparison(discriminant2, 0.0f) >= 0){
-        Discriminant->discriminant = sqrtf(discriminant2);
-        Discriminant->is_complex = false;
-    } else {
-        Discriminant->discriminant = sqrtf(-discriminant2);
-        Discriminant->is_complex = true;
-    }
+    Discriminant->discriminant = sqrtf(fabsf(discriminant2));
+    Discriminant->is_complex = comparison(discriminant2, 0.0f) < 0;
 }
 
 void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *solutions){
@@ -313,7 +321,8 @@ void find_real_solutions(float coefficient_a, float coefficient_b, float discrim
         return;
     }
     solutions->special_cases = CASE_TWO_SOLUTIONS_REAL;
-    float x1 = 0.0f, x2 = 0.0f;
+    float x1 = 0.0f;
+    float x2 = 0.0f;
     x1 = (-coefficient_b + discriminant) / (2 * coefficient_a);
     x2 = (-coefficient_b - discriminant) / (2 * coefficient_a);
     solutions->first_solution.real_part = x1;
