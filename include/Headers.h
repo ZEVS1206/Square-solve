@@ -1,7 +1,7 @@
 #ifndef Headers
 #define Headers
-//#define TEST
-#define USUAL
+#define TEST
+//#define USUAL
 #include "Colours.h"
 
 void test_programm(void);
