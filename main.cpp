@@ -15,8 +15,8 @@ int main(){
         find_solutions(coefficient_a, coefficient_b, coefficient_c, &solutions);
         print_solutions(&solutions);
     #else
-        printfRed("Оно работает!\n");
-        printfGreen("Ура!");
+        printfRed("It's working, yees!\n");
+        printfGreen("Lets go!");
     #endif
     return 0;
 }

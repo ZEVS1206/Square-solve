@@ -101,19 +101,19 @@ static int get_verdict(struct Solutions *solutions, const struct Test_solutions 
 
 static void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *solutions, const struct Test_solutions *test_solution){
     if (verdict == 0){
-        printfGreen("Тест %d успешно пройден!\n", number_of_test);
+        printfGreen("Test %2d:  OK\n", number_of_test);
     } else {
-        printfRed("Тест %d не пройден!\n", number_of_test);
-        printf("Здесь данные коэффициенты:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c);
-        printf("Вот верный ответ:\n");
+        printfRed("Test %2d:  Failed\n", number_of_test);
+        printf("There are coefficients:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c);
+        printf("There are correct answers:\n");
         struct Solutions test = {0};
-        test.first_solution.real_part = solutions->first_solution.real_part;
-        test.second_solution.real_part = solutions->second_solution.real_part;
-        test.first_solution.complex_part = solutions->first_solution.complex_part;
-        test.second_solution.complex_part = solutions->second_solution.complex_part;
+        test.first_solution.real_part = test_solution->first_solution.real_part;
+        test.second_solution.real_part = test_solution->second_solution.real_part;
+        test.first_solution.complex_part = test_solution->first_solution.complex_part;
+        test.second_solution.complex_part = test_solution->second_solution.complex_part;
         test.special_cases = solutions->special_cases;
         print_solutions(&test);
-        printf("\nВот ваш ответ:\n");
+        printf("\nThere are your answers:\n");
         print_solutions(solutions);
         printf("\n");
     }
@@ -153,7 +153,10 @@ static Case_of_input input_check(float *coefficient){
         }
         c = getchar();
     }
-
+    if (strcmp(bufer, "nan") == 0 || strcmp(bufer, "inf") == 0 || strcmp(bufer, "NAN") == 0 || strcmp(bufer, "INF") == 0){
+        printf("Here\n");
+        return PROBLEM_OF_NO_INPUT;
+    }
     if (c == EOF || (c == '\n' && i == 0)){
         return PROBLEM_OF_NO_INPUT;
     }
@@ -175,16 +178,16 @@ static Case_of_input input_check(float *coefficient){
 
 
 static void input(float *coefficient, char position){
-    printf("Введите коэффициент %c:", position);
+    printf("Enter coefficient %c:", position);
     Case_of_input status = NO_PROBLEMS;
     do {
         status = input_check(coefficient);
         if (status == INCORRECT_INPUT){
-            printf("Неверный ввод! Введите коэффициент %c:", position);
+            printf("Incorrect input! Repeat the input of coefficient %c:", position);
         } else if (status == PROBLEM_OF_OVERFLOW){
-            printf("Переполнение буфера ввода! Повторите ввод коэффициента %c: ", position);
+            printf("The buffer was overflowed. Repeat the input of coefficient %c: ", position);
         } else if (status == PROBLEM_OF_NO_INPUT) {
-            printf("Вы ничего не ввели! Повторите ввод коэффициента %c: ", position);
+            printf("Incorrect input! You did not enter anything, please enter the coefficient %c: ", position);
         }
     } while (status != NO_PROBLEMS);
 }
@@ -201,26 +204,23 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
 void print_solutions(const struct Solutions *solutions){
     switch (solutions->special_cases){
         case CASE_TWO_SOLUTIONS_COMPLEX:
-            //printf("Уравнение имеет два комплексных решения:\n");
             printf("x1 = %.6f + %.6fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
             printf("x2 = %.6f - %.6fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
             break;
         case CASE_TWO_SOLUTIONS_REAL:
-            //printf("Уравнение имеет два действительных решения:\n");
             printf("x1 = %.6f\nx2 = %.6f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
             break;
         case CASE_ONE_SOLUTION:
-            //printf("Уравнение имеет единственное действительное решение:\n");
             printf("x = %.6f\n", solutions->first_solution.real_part);
             break;
         case NONE_SOLUTIONS:
-            printf("Данное уравнение не имеет решений!\n");
+            printf("This equation has no solutions!\n");
             break;
         case INFINITY_SOLUTIONS:
-            printf("Данное уравнение имеет бесконечно много решений!\n");
+            printf("This equation has an infinity of solutions!\n");
             break;
         default:
-            printf("Error: Неизвестный случай!\n");
+            printf("Error: Unknown case!\n");
             break;
     }
 }
@@ -229,7 +229,7 @@ void print_solutions(const struct Solutions *solutions){
 static void find_discriminant(float coefficient_b, float coefficient_c, float coefficient_a, struct Discriminant_and_imagine_units *Discriminant){
     assert(Discriminant != NULL);
     if (comparison(coefficient_a, 0.0f) == 0){
-        printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
+        printf("Error: It is not the quadratic equation!\n");
         return;
     }
     float discriminant2 = coefficient_b * coefficient_b - 4 * coefficient_a * coefficient_c;
@@ -259,7 +259,7 @@ static void quadratic_equation(float coefficient_a, float coefficient_b, float c
     struct Discriminant_and_imagine_units Discriminant = {0};
     find_discriminant(coefficient_b, coefficient_c, coefficient_a, &Discriminant);
     if (comparison(coefficient_a, 0.0f) == 0){
-        printf("Error: Данное уравнение не является квадратным, поэтому вызов функции дискриминанта не корректен!\n");
+        printf("Error: It is not the quadratic equation!\n");
         return;
     }
 
@@ -304,7 +304,7 @@ static void linear_equation(float coefficient_b, float coefficient_c, struct Sol
     assert(solutions != NULL);
 
     if (comparison(coefficient_b, 0.0f) == 0){
-        printf("Error: Данное уравнение не является линейным!\n");
+        printf("Error:It is not linear equation!\n");
         return;
     }
     solutions->first_solution.real_part = (comparison(coefficient_c, 0.0f) != 0) ? ((-coefficient_c) / coefficient_b) : 0;

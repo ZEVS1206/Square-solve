@@ -1,5 +1,7 @@
+#ifndef Headers
+#define Headers
 //#define TEST
-//#define USUAL
+#define USUAL
 #include "Colours.h"
 
 void test_programm(void);
@@ -28,6 +30,7 @@ struct Solutions {
     Complex_number second_solution;
     Case_of_solution special_cases;
 };
+#endif
 
 
 
