@@ -1,15 +1,22 @@
 #ifndef solver_h
 #define solver_h
-//#define TEST
-#define USUAL
+#define TEST
+//#define USUAL
 
-void find_solutions(float coefficient_a, float coefficient_b, float coefficient_c, struct Solutions *);/*Find solutions*/
+struct Coefficients {
+    float coefficient_a;
+    float coefficient_b;
+    float coefficient_c;
+};
+
+void find_solutions(const struct Coefficients *, struct Solutions *);/*Find solutions*/
 int comparison(float a, float b);
 
 struct Complex_number {
     float real_part;
     float complex_part;
 };
+
 
 enum Case_of_solution
 {

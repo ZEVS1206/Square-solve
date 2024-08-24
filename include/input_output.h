@@ -1,8 +1,9 @@
 #ifndef input_h
 #define input_h
 #include "Colours.h"
+#include "Solver.h"
 
-void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c);/*enter the values*/
+void enter_coefficients(struct Coefficients *);/*enter the values*/
 void print_solutions(const struct Solutions *);/*print the solutions*/
 
 enum Case_of_input

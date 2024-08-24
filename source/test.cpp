@@ -1,5 +1,5 @@
-#include "test.h"
-#include "solver.h"
+#include "Test.h"
+#include "Solver.h"
 
 #include <TXLib.h>
 #include <stdio.h>
@@ -51,12 +51,12 @@ static void testing_values(struct Test_solutions *test_solutions, const int quan
 }
 
 static int get_verdict(struct Solutions *solutions, const struct Test_solutions *test_solution){
-    find_solutions(test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c, solutions);
-    if (solutions->special_cases == test_solution->special_cases
-        && (comparison(test_solution->first_solution.real_part, solutions->first_solution.real_part) == 0
-        && comparison(test_solution->second_solution.real_part, solutions->second_solution.real_part) == 0
-        && comparison(test_solution->first_solution.complex_part, solutions->first_solution.complex_part) == 0
-        && comparison(test_solution->second_solution.complex_part, solutions->second_solution.complex_part) == 0)){
+    find_solutions(&(test_solution->coefficients), solutions);
+    if (solutions->special_cases == test_solution->solutions.special_cases
+        && (comparison(test_solution->solutions.first_solution.real_part, solutions->first_solution.real_part) == 0
+        && comparison(test_solution->solutions.second_solution.real_part, solutions->second_solution.real_part) == 0
+        && comparison(test_solution->solutions.first_solution.complex_part, solutions->first_solution.complex_part) == 0
+        && comparison(test_solution->solutions.second_solution.complex_part, solutions->second_solution.complex_part) == 0)){
         return 0;
     } else {
         return 1;
@@ -68,16 +68,16 @@ static void print_result_of_testing(int number_of_test, int verdict, const struc
         printfGreen("Test %2d:  OK\n", number_of_test);
     } else {
         printfRed("Test %2d:  Failed\n", number_of_test);
-        printf("There are coefficients:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a,
-                                                              test_solution->coefficient_b,
-                                                              test_solution->coefficient_c);
+        printf("There are coefficients:\na=%f\nb=%f\nc=%f\n", test_solution->coefficients.coefficient_a,
+                                                              test_solution->coefficients.coefficient_b,
+                                                              test_solution->coefficients.coefficient_c);
         printf("There are correct answers:\n");
         struct Solutions test = {0};
-        test.first_solution.real_part     = test_solution->first_solution.real_part;
-        test.second_solution.real_part    = test_solution->second_solution.real_part;
-        test.first_solution.complex_part  = test_solution->first_solution.complex_part;
-        test.second_solution.complex_part = test_solution->second_solution.complex_part;
-        test.special_cases = solutions->special_cases;
+        test.first_solution.real_part     = test_solution->solutions.first_solution.real_part;
+        test.second_solution.real_part    = test_solution->solutions.second_solution.real_part;
+        test.first_solution.complex_part  = test_solution->solutions.first_solution.complex_part;
+        test.second_solution.complex_part = test_solution->solutions.second_solution.complex_part;
+        test.special_cases                = test_solution->solutions.special_cases;
         print_solutions(&test);
         printf("\nThere are your answers:\n");
         print_solutions(solutions);

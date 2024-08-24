@@ -1,5 +1,5 @@
-#include "input_output.h"
-#include "solver.h"
+#include "Input_output.h"
+#include "Solver.h"
 
 #include <TXLib.h>
 #include <stdio.h>
@@ -71,10 +71,10 @@ static void input(float *coefficient, char position){
     } while (status != NO_PROBLEMS);
 }
 
-void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coefficient_c){
-    input(coefficient_a, 'a');
-    input(coefficient_b, 'b');
-    input(coefficient_c, 'c');
+void enter_coefficients(struct Coefficients *coefficients){
+    input(&(coefficients->coefficient_a), 'a');
+    input(&(coefficients->coefficient_b), 'b');
+    input(&(coefficients->coefficient_c), 'c');
     //printf("%f %f %f\n", *coefficient_a, *coefficient_b, *coefficient_c);
 }
 
