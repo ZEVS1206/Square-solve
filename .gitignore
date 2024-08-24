@@ -1,4 +1,6 @@
 *.save
+build
+Test_project
 *.o
 *.log
 *.dmp
