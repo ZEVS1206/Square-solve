@@ -2,44 +2,31 @@ CC=g++
 CFLAGS=-Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equal -Winline -Wunreachable-code -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Weffc++ -Wmain -Wextra -Wall -g -pipe -fexceptions -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wempty-body -Wformat-security -Wformat=2 -Wignored-qualifiers -Wlogical-op -Wno-missing-field-initializers -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wstack-usage=8192 -Wstrict-aliasing -Wstrict-null-sentinel -Wtype-limits -Wwrite-strings -Werror=vla -D_DEBUG -D_EJUDGE_CLIENT_SIDE
 SOURCE_DIR = source
 BUILD_DIR = build
-OBJECTS=$(wildcard *.o)
-SOURCES=$(wildcard *.cpp)
+INCLUDE= -I include
+CFLAGS+=$(INCLUDE)
+SOURCES=$(wildcard $(SOURCE_DIR)/*.cpp)
+OBJECTS=$(patsubst $(SOURCE_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
+EXEC_NAME := square_solve.exe
 
 # wildcart patsubst
+.PHONY: clean all
 
-all: $(SOURCE_DIR) comp built square_solve
+all: $(BUILD_DIR)/$(EXEC_NAME)
 
-$(SOURCE_DIR): $(SORCE_DIR)
-	mkdir $(SOURCE_DIR)
-	mv $(SOURCES) $(SOURCE_DIR)
-comp:
-	$(CC) $(CFLAGS) $(SOURCE_DIR)/main.cpp $(SOURCE_DIR)/auxiliary_functionality.cpp -c
+$(BUILD_DIR)/$(EXEC_NAME): $(OBJECTS) | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
-#main.o:
-#	$(CC) $(CFLAGS) $(SOURCE_DIR)/main.cpp -c
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $< -c -o $@
 
+#$(BUILD_DIR)/auxiliary_functionality.o: $(SOURCE_DIR)/auxiliary_functionality.cpp | $(BUILD_DIR)
+#	$(CC) $(CFLAGS) $(SOURCE_DIR)/auxiliary_functionality.cpp -c -o $(BUILD_DIR)/auxiliary_functionality.o
 
-#auxiliary_functionality.o:
-#	$(CC) $(CFLAGS) $(SOURCE_DIR)/auxiliary_functionality.cpp -c
-
-
-built:
-	mkdir $(BUILD_DIR)
-	mv $(OBJECTS) $(BUILD_DIR)
-
-square_solve:
-	$(CC) $(BUILD_DIR)/main.o $(BUILD_DIR)/auxiliary_functionality.o -o square_solve
-	mv square_solve.exe $(BUILD_DIR)
-
-
-#Headers: main.cpp auxiliary_functionality.cpp
-#	$(CC) $(CFLAGS) -c main.cpp auxiliary_functionality.cpp
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -rf $(BUILD_DIR) *.o $(BUILD_DIR)/*.o $(BUILD_DIR)/square_solve.exe
-
+	rm -rf $(BUILD_DIR)
 
 run:
-	$(BUILD_DIR)/square_solve.exe
-
-
+	$(BUILD_DIR)/$(EXEC_NAME)

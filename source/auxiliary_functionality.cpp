@@ -101,10 +101,12 @@ static int get_verdict(struct Solutions *solutions, const struct Test_solutions 
 
 static void print_result_of_testing(int number_of_test, int verdict, const struct Solutions *solutions, const struct Test_solutions *test_solution){
     if (verdict == 0){
-        printfGreen("Test %2d:  OK\n", number_of_test);
+        printfGreen("Test %d:  OK\n", number_of_test);
     } else {
-        printfRed("Test %2d:  Failed\n", number_of_test);
-        printf("There are coefficients:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a, test_solution->coefficient_b, test_solution->coefficient_c);
+        printfRed("Test %d:  Failed\n", number_of_test);
+        printf("There are coefficients:\na=%f\nb=%f\nc=%f\n", test_solution->coefficient_a,
+                                                              test_solution->coefficient_b,
+                                                              test_solution->coefficient_c);
         printf("There are correct answers:\n");
         struct Solutions test = {0};
         test.first_solution.real_part     = test_solution->first_solution.real_part;
@@ -204,11 +206,14 @@ void enter_coefficients(float *coefficient_a, float *coefficient_b, float *coeff
 void print_solutions(const struct Solutions *solutions){
     switch (solutions->special_cases){
         case CASE_TWO_SOLUTIONS_COMPLEX:
-            printf("x1 = %.6f + %.6fi\n", solutions->first_solution.real_part, solutions->first_solution.complex_part);
-            printf("x2 = %.6f - %.6fi\n", solutions->second_solution.real_part, solutions->second_solution.complex_part);
+            printf("x1 = %.6f + %.6fi\n", solutions->first_solution.real_part,
+                                          solutions->first_solution.complex_part);
+            printf("x2 = %.6f - %.6fi\n", solutions->second_solution.real_part,
+                                          solutions->second_solution.complex_part);
             break;
         case CASE_TWO_SOLUTIONS_REAL:
-            printf("x1 = %.6f\nx2 = %.6f\n", solutions->first_solution.real_part, solutions->second_solution.real_part);
+            printf("x1 = %.6f\nx2 = %.6f\n", solutions->first_solution.real_part,
+                                             solutions->second_solution.real_part);
             break;
         case CASE_ONE_SOLUTION:
             printf("x = %.6f\n", solutions->first_solution.real_part);
