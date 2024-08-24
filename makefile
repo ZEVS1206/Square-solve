@@ -19,9 +19,6 @@ $(BUILD_DIR)/$(EXEC_NAME): $(OBJECTS) | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $< -c -o $@
 
-#$(BUILD_DIR)/auxiliary_functionality.o: $(SOURCE_DIR)/auxiliary_functionality.cpp | $(BUILD_DIR)
-#	$(CC) $(CFLAGS) $(SOURCE_DIR)/auxiliary_functionality.cpp -c -o $(BUILD_DIR)/auxiliary_functionality.o
-
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 

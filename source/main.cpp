@@ -7,7 +7,7 @@ int main(){
     #if defined(TEST)
         test_programm();
     #elif defined(USUAL)
-        float coefficient_a = 0.0f; // asdjlvhjklkjhgghjklkjdkjwbdbkahgfghjklajsldkajsldkjaslk
+        float coefficient_a = 0.0f;
         float coefficient_b = 0.0f;
         float coefficient_c = 0.0f;
         enter_coefficients(&coefficient_a, &coefficient_b, &coefficient_c);
