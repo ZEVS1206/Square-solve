@@ -1,7 +1,5 @@
 #ifndef solver_h
 #define solver_h
-#define TEST
-//#define USUAL
 
 struct Coefficients {
     float coefficient_a;

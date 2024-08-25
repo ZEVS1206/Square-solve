@@ -4,19 +4,11 @@
 #include "Input_output.h"
 #include "Test.h"
 
-int main(){
-
-    #if defined(TEST)
+int main(int argc, char *argv[]){
+    if (argc == 1){
         test_programm();
-    #elif defined(USUAL)
-        struct Coefficients coefficients = {0};
-        enter_coefficients(&coefficients);
-        struct Solutions solutions = {0};
-        find_solutions(&coefficients, &solutions);
-        print_solutions(&solutions);
-    #else
-        printfRed("It's working, yees!\n");
-        printfGreen("Lets go!");
-    #endif
+    } else {
+        input_from_console(argc, argv);
+    }
     return 0;
 }

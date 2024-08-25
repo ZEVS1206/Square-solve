@@ -5,6 +5,7 @@
 
 void enter_coefficients(struct Coefficients *);/*enter the values*/
 void print_solutions(const struct Solutions *);/*print the solutions*/
+void input_from_console(int argc, char *argv[]);
 
 enum Case_of_input
 {

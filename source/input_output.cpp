@@ -1,5 +1,6 @@
 #include "Input_output.h"
 #include "Solver.h"
+#include "Test.h"
 
 #include <TXLib.h>
 #include <stdio.h>
@@ -9,6 +10,47 @@
 
 static Case_of_input input_check(float *coefficient);
 static void input(float *coefficient, char position);
+static void user_input();
+
+void input_from_console(int argc, char *argv[]){
+    int i = 1;
+    int flag = 0;
+    while (i < argc){
+        if (flag){
+            break;
+        }
+        if (argv[i][0] == '-'){
+            switch (argv[i][1]){
+                case 't':
+                    test_programm();
+                    flag = 1;
+                    break;
+                case 'u':
+                    user_input();
+                    flag = 1;
+                    break;
+                default:
+                    printfRed("Unknown parameters were entered!\n");
+                    break;
+            }
+        }
+        i++;
+    }
+
+}
+
+static void user_input(){
+    struct Coefficients coefficients = {0};
+    enter_coefficients(&coefficients);
+    struct Solutions solutions = {0};
+    find_solutions(&coefficients, &solutions);
+    print_solutions(&solutions);
+}
+
+
+
+
+
 
 
 static Case_of_input input_check(float *coefficient){

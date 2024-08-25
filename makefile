@@ -9,7 +9,7 @@ OBJECTS=$(patsubst $(SOURCE_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
 EXEC_NAME := square_solve.exe
 
 # wildcart patsubst
-.PHONY: clean all
+.PHONY: clean all run
 
 all: $(BUILD_DIR)/$(EXEC_NAME)
 
