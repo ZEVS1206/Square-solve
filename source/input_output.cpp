@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-
 static Case_of_input input_check(float *coefficient);
 static void input(float *coefficient, char position);
 static void user_input();
@@ -19,7 +18,6 @@ void special_input(int argc, char *argv[]){
     type = input_from_console(argc, argv);
     mode_of_programm(type);
 }
-
 
 Type input_from_console(int argc, char *argv[]){
     if (argc > 2 || argv[1][0] != '-'){
@@ -50,8 +48,6 @@ Type input_from_console(int argc, char *argv[]){
         return ERROR_OF_INPUT;
     }
     return result;
-
-
 }
 
 static void mode_of_programm(Type type){
@@ -64,7 +60,6 @@ static void mode_of_programm(Type type){
     }
 }
 
-
 static void user_input(){
     struct Coefficients coefficients = {0};
     enter_coefficients(&coefficients);
@@ -73,29 +68,23 @@ static void user_input(){
     print_solutions(&solutions);
 }
 
-
-
-
-
-
-
 static Case_of_input input_check(float *coefficient){
     const int BUFSIZE = 10;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
     int i = 0;
-    int c = getchar();
-    while (c != '\n' && isspace(c)){
+    int c = 0;
+    do {
         c = getchar();
-    }
-    bool flag = false;
+    } while (c != '\n' && isspace(c));
+    bool is_suitable_space = false;
     while (i < BUFSIZE && c != EOF && c != '\n'){
         if (isspace(c)){
-            flag = true;
+            is_suitable_space = true;
         } else {
-            flag = false;
+            is_suitable_space = false;
         }
-        if (!flag){
+        if (!is_suitable_space){
             bufer[i] = (char)c;
             i++;
         }
@@ -110,10 +99,7 @@ static Case_of_input input_check(float *coefficient){
     if (c == EOF || (c == '\n' && i == 0)){
         return PROBLEM_OF_NO_INPUT;
     }
-    if (c == '\n' || flag){
-        if (flag){
-            while(getchar() != '\n');
-        }
+    if (c == '\n' || is_suitable_space){
         bufer[i] = '\0';
         *coefficient = strtof(bufer, &end);
         if (*end != '\0'){
@@ -132,11 +118,15 @@ static void input(float *coefficient, char position){
     do {
         status = input_check(coefficient);
         if (status == INCORRECT_INPUT){
-            printf("Incorrect input! Repeat the input of coefficient %c:", position);
+            printf("Incorrect input! Repeat the input of coefficient %c:",
+                    position);
         } else if (status == PROBLEM_OF_OVERFLOW){
-            printf("The buffer was overflowed. Repeat the input of coefficient %c: ", position);
+            printf("The buffer was overflowed. "
+                   "Repeat the input of coefficient %c: ", position);
         } else if (status == PROBLEM_OF_NO_INPUT) {
-            printf("Incorrect input! You did not enter anything, please enter the coefficient %c: ", position);
+            printf("Incorrect input! "
+                   "You did not enter anything, please enter the coefficient %c: ",
+                   position);
         }
     } while (status != NO_PROBLEMS);
 }
