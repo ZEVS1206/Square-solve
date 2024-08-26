@@ -8,6 +8,8 @@ SOURCES=$(wildcard $(SOURCE_DIR)/*.cpp)
 OBJECTS=$(patsubst $(SOURCE_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
 EXEC_NAME := square_solve.exe
 
+MODE ?=
+
 # wildcart patsubst
 .PHONY: clean all run
 
@@ -26,4 +28,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 run:
-	$(BUILD_DIR)/$(EXEC_NAME)
+	$(BUILD_DIR)/$(EXEC_NAME) $(MODE)
