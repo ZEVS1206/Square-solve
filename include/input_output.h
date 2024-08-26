@@ -3,9 +3,16 @@
 #include "Colours.h"
 #include "Solver.h"
 
+enum Type
+{
+    TEST_COEFFICIENTS = 0,
+    USER_COEFFICIENTS = 1,
+    ERROR_OF_INPUT    = 2,
+};
+
 void enter_coefficients(struct Coefficients *);/*enter the values*/
 void print_solutions(const struct Solutions *);/*print the solutions*/
-void input_from_console(int argc, char *argv[]);
+void special_input(int argc, char *argv[]);
 
 enum Case_of_input
 {
@@ -14,7 +21,6 @@ enum Case_of_input
     PROBLEM_OF_OVERFLOW = 2,
     PROBLEM_OF_NO_INPUT = 3
 };
-
 
 
 #endif

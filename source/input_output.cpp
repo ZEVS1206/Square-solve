@@ -11,33 +11,59 @@
 static Case_of_input input_check(float *coefficient);
 static void input(float *coefficient, char position);
 static void user_input();
+static Type input_from_console(int argc, char *argv[]);
+static void mode_of_programm(Type type);
 
-void input_from_console(int argc, char *argv[]){
-    int i = 1;
-    int flag = 0;
-    while (i < argc){
-        if (flag){
+void special_input(int argc, char *argv[]){
+    Type type = ERROR_OF_INPUT;
+    type = input_from_console(argc, argv);
+    mode_of_programm(type);
+}
+
+
+Type input_from_console(int argc, char *argv[]){
+    if (argc > 2 || argv[1][0] != '-'){
+        return ERROR_OF_INPUT;
+    }
+    int symbol = 0;
+    int cnt = 0;
+    Type result = ERROR_OF_INPUT;
+    int index = 0;
+    while ((symbol = argv[1][++index])){
+        cnt++;
+        switch (symbol){
+            case 't':
+                result = TEST_COEFFICIENTS;
+                break;
+            case 'u':
+                result = USER_COEFFICIENTS;
+                break;
+            default:
+                result = ERROR_OF_INPUT;
+                break;
+        }
+        if (cnt > 1){
             break;
         }
-        if (argv[i][0] == '-'){
-            switch (argv[i][1]){
-                case 't':
-                    test_programm();
-                    flag = 1;
-                    break;
-                case 'u':
-                    user_input();
-                    flag = 1;
-                    break;
-                default:
-                    printfRed("Unknown parameters were entered!\n");
-                    break;
-            }
-        }
-        i++;
     }
+    if (cnt > 1){
+        return ERROR_OF_INPUT;
+    }
+    return result;
+
 
 }
+
+static void mode_of_programm(Type type){
+    if (type == ERROR_OF_INPUT){
+        printfRed("Incorrect input!\n");
+    } else if (type == TEST_COEFFICIENTS){
+        test_programm();
+    } else {
+        user_input();
+    }
+}
+
 
 static void user_input(){
     struct Coefficients coefficients = {0};
@@ -75,8 +101,10 @@ static Case_of_input input_check(float *coefficient){
         }
         c = getchar();
     }
-    if (strcmp(bufer, "nan") == 0 || strcmp(bufer, "inf") == 0 || strcmp(bufer, "NAN") == 0 || strcmp(bufer, "INF") == 0){
-        printf("Here\n");
+    if (   strcmp(bufer, "nan") == 0
+        || strcmp(bufer, "inf") == 0
+        || strcmp(bufer, "NAN") == 0
+        || strcmp(bufer, "INF") == 0){
         return PROBLEM_OF_NO_INPUT;
     }
     if (c == EOF || (c == '\n' && i == 0)){

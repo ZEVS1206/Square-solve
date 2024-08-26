@@ -73,9 +73,9 @@ static void find_real_solutions(const struct Coefficients *coefficients, float d
     if (comparison(discriminant, 0.0f) == 0){
         float x = ((comparison(coefficients->coefficient_b, 0.0f)) == 0) ? 0 : (-(coefficients->coefficient_b)) / (2 * (coefficients->coefficient_a));
         solutions->first_solution.real_part = x;
-        solutions->first_solution.complex_part = 0;
-        solutions->second_solution.real_part = 0;
-        solutions->second_solution.complex_part = 0;
+        solutions->first_solution.complex_part = 0.0f;
+        solutions->second_solution.real_part = 0.0f;
+        solutions->second_solution.complex_part = 0.0f;
         solutions->special_cases = CASE_ONE_SOLUTION;
         return;
     }
@@ -85,9 +85,9 @@ static void find_real_solutions(const struct Coefficients *coefficients, float d
     x1 = (-(coefficients->coefficient_b) + discriminant) / (2 * (coefficients->coefficient_a));
     x2 = (-(coefficients->coefficient_b) - discriminant) / (2 * (coefficients->coefficient_a));
     solutions->first_solution.real_part = x1;
-    solutions->first_solution.complex_part = 0;
+    solutions->first_solution.complex_part = 0.0f;
     solutions->second_solution.real_part = x2;
-    solutions->second_solution.complex_part = 0;
+    solutions->second_solution.complex_part = 0.0f;
 }
 
 static void find_complex_solutions(const struct Coefficients *coefficients, float discriminant, struct Solutions *solutions){

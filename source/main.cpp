@@ -8,7 +8,7 @@ int main(int argc, char *argv[]){
     if (argc == 1){
         test_programm();
     } else {
-        input_from_console(argc, argv);
+        special_input(argc, argv);
     }
     return 0;
 }
