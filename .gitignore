@@ -1,9 +1,10 @@
 *.save
-/build
-/Test_project
+build
+Test_project
 *.o
 *.log
 *.dmp
 *.md
-
+latex
+html
 a.exe
