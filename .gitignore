@@ -5,6 +5,4 @@ Test_project
 *.log
 *.dmp
 *.md
-latex
-html
 a.exe
