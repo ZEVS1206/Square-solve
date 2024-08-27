@@ -1,3 +1,10 @@
+/**
+    \file
+    \brief
+    Test programm on coefficients from file of the tests
+*/
+
+
 #include "Test.h"
 #include "Solver.h"
 
@@ -49,7 +56,6 @@ void test_programm(void){
             test_solutions[i].solutions.special_cases = INFINITY_SOLUTIONS;
         }
     }
-    printf("%f\n", test_solutions[0].coefficients.coefficient_a);
     testing_values(test_solutions, cnt);
 }
 

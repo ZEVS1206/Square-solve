@@ -1,3 +1,10 @@
+/**
+    \file
+    \brief
+    programm for solve equation
+*/
+
+
 #include "Solver.h"
 
 #include <TXLib.h>
@@ -5,6 +12,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
+
 
 static void find_discriminant(const struct Coefficients *, struct Discriminant_and_imagine_units *);/*discriminant*/
 static void quadratic_equation(const struct Coefficients *, struct Solutions *);
@@ -24,7 +32,18 @@ int comparison(float a, float b){
     }
 }
 
+/**
+    \brief Function for finding discriminant
+
+    \param [in] const struct Coefficients - Values of the coefficients a, b, c
+    \param [in] struct Discriminant_and_imagine_unit - The place where discriminant and
+                                                       complex status will be saved
+
+
+*/
+
 static void find_discriminant(const struct Coefficients *coefficients, struct Discriminant_and_imagine_units *Discriminant){
+    assert(coefficients != NULL);
     assert(Discriminant != NULL);
     if (comparison(coefficients->coefficient_a, 0.0f) == 0){
         printf("Error: It is not the quadratic equation!\n");
@@ -35,11 +54,20 @@ static void find_discriminant(const struct Coefficients *coefficients, struct Di
     Discriminant->is_complex = comparison(discriminant2, 0.0f) < 0;
 }
 
+/**
+    \brief Function of finding solutions
+
+
+    \param [in] struct Coefficients - Values of coefficients a, b, c
+    \param [in] struct Solutions - The place where the solutions will be saved
+*/
+
 void find_solutions(const struct Coefficients *coefficients, struct Solutions *solutions){
     assert(isfinite(coefficients->coefficient_a));
     assert(isfinite(coefficients->coefficient_b));
     assert(isfinite(coefficients->coefficient_c));
     assert(solutions != NULL);
+    assert(coefficients != NULL);
 
     if (comparison(coefficients->coefficient_a, 0.0f) != 0){
         quadratic_equation(coefficients, solutions);
@@ -52,8 +80,21 @@ void find_solutions(const struct Coefficients *coefficients, struct Solutions *s
     }
 }
 
+/**
+    \brief A function for solving exactly the quadratic equation
+
+
+    \param [in] struct Coefficients - Values of coefficients a, b, c
+    \param [in] struct Solutions - The place where the solutions will be saved
+
+    \warning coefficient_a int struct Coefficients must be != 0
+
+*/
+
 static void quadratic_equation(const struct Coefficients *coefficients, struct Solutions *solutions){
     assert(solutions != NULL);
+    assert(coefficients != NULL);
+
     struct Discriminant_and_imagine_units Discriminant = {0};
     find_discriminant(coefficients, &Discriminant);
     if (comparison(coefficients->coefficient_a, 0.0f) == 0){
@@ -69,7 +110,21 @@ static void quadratic_equation(const struct Coefficients *coefficients, struct S
 
 }
 
+/**
+    \brief Function for searching real solutions
+
+    \param [in] const struct Coefficients - Values of coefficients a, b, c
+    \param [in] discriminant - the value of the discriminant of equation
+    \param [in] struct Solutions - The place where the solutions will be saved
+
+    \warning This function for REAL solutions, so discriminant != 0
+
+*/
+
 static void find_real_solutions(const struct Coefficients *coefficients, float discriminant, struct Solutions *solutions){
+    assert(coefficients != NULL);
+    assert(solutions != NULL);
+
     if (comparison(discriminant, 0.0f) == 0){
         float x = ((comparison(coefficients->coefficient_b, 0.0f)) == 0) ? 0 : (-(coefficients->coefficient_b)) / (2 * (coefficients->coefficient_a));
         solutions->first_solution.real_part = x;
@@ -90,7 +145,19 @@ static void find_real_solutions(const struct Coefficients *coefficients, float d
     solutions->second_solution.complex_part = 0.0f;
 }
 
+/**
+    \brief Function for searching complex solutions
+
+    \param [in] const struct Coefficients - Values of the coefficients a, b, c
+    \param [in] discriminant - the value of the discriminant of the equation
+    \param [in] struct Solutions - The place where the solutions will be saved
+
+*/
+
 static void find_complex_solutions(const struct Coefficients *coefficients, float discriminant, struct Solutions *solutions){
+    assert(coefficients != NULL);
+    assert(solutions != NULL);
+
     solutions->special_cases = CASE_TWO_SOLUTIONS_COMPLEX;
     solutions->first_solution.real_part = (-(coefficients->coefficient_b) / (2 * (coefficients->coefficient_a)));
     solutions->first_solution.complex_part = (discriminant / (2 * (coefficients->coefficient_a)));
@@ -98,8 +165,17 @@ static void find_complex_solutions(const struct Coefficients *coefficients, floa
     solutions->second_solution.complex_part = (discriminant / (2 * (coefficients->coefficient_a)));
 }
 
+/**
+    \brief Function for solving exactly linear equation
+
+    \param [in] const struct Coefficients - Values of the coefficients a, b, c
+    \param [in] struct Solutions - The place where the solutions will be saved
+
+*/
+
 static void linear_equation(const struct Coefficients *coefficients, struct Solutions *solutions){
     assert(solutions != NULL);
+    assert(coefficients != NULL);
 
     if (comparison(coefficients->coefficient_b, 0.0f) == 0){
         printf("Error:It is not linear equation!\n");
@@ -109,6 +185,14 @@ static void linear_equation(const struct Coefficients *coefficients, struct Solu
     solutions->first_solution.complex_part = 0;
     solutions->special_cases = CASE_ONE_SOLUTION;
 }
+
+/**
+    \brief Function for searching special cases NONE_SOLUTIONS and INFINITY_SOLUTIONS
+
+    \param [in] float coefficient_c - the value of the coefficient c
+    \param [in] struct Solutions - The place where the solutions will be saved
+
+*/
 
 static void special_cases(float coefficient_c, struct Solutions *solutions){
     assert(solutions != NULL);

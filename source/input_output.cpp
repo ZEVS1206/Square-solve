@@ -1,3 +1,10 @@
+/**
+    \file
+    \brief
+    A program that implements input and output
+ */
+
+
 #include "Input_output.h"
 #include "Solver.h"
 #include "Test.h"
@@ -13,13 +20,30 @@ static void user_input();
 static Type input_from_console(int argc, char *argv[]);
 static void mode_of_programm(Type type);
 
+/**
+    \brief Function, which get data from console and processing it
+
+    \param [in] Data from console
+
+*/
+
 void special_input(int argc, char *argv[]){
+    assert(argv != NULL);
+
     Type type = ERROR_OF_INPUT;
     type = input_from_console(argc, argv);
     mode_of_programm(type);
 }
 
+/**
+    \brief Function of getting special flags for mode of the programm
+
+    \param [in] Data from the console
+    \return  Give type of the information from console
+*/
+
 Type input_from_console(int argc, char *argv[]){
+    assert(argv != NULL);
     if (argc > 2 || argv[1][0] != '-'){
         return ERROR_OF_INPUT;
     }
@@ -50,6 +74,13 @@ Type input_from_console(int argc, char *argv[]){
     return result;
 }
 
+/**
+    \brief Function for choosing mode of execution programm
+    \param [in] type - type of the data from console
+
+*/
+
+
 static void mode_of_programm(Type type){
     if (type == ERROR_OF_INPUT){
         printfRed("Incorrect input!\n");
@@ -60,6 +91,11 @@ static void mode_of_programm(Type type){
     }
 }
 
+/**
+    \brief Function, which starts input of user coefficients
+
+*/
+
 static void user_input(){
     struct Coefficients coefficients = {0};
     enter_coefficients(&coefficients);
@@ -68,7 +104,17 @@ static void user_input(){
     print_solutions(&solutions);
 }
 
+/**
+    \brief Function of secure input
+
+    \param [out] coefficient - the value of the input coefficient
+
+    \return the verdict of the input check
+
+*/
+
 static Case_of_input input_check(float *coefficient){
+    assert(coefficient != NULL);
     const int BUFSIZE = 10;
     char *end = NULL;
     char bufer[BUFSIZE] = {};
@@ -112,7 +158,16 @@ static Case_of_input input_check(float *coefficient){
     return NO_PROBLEMS;
 }
 
+/**
+    \brief Function for input specific coefficient
+    \param [out] coefficient - the value of the coefficient
+    \param [in] position - name of the coefficient
+
+
+*/
+
 static void input(float *coefficient, char position){
+    assert(coefficient != NULL);
     printf("Enter coefficient %c:", position);
     Case_of_input status = NO_PROBLEMS;
     do {
@@ -131,14 +186,29 @@ static void input(float *coefficient, char position){
     } while (status != NO_PROBLEMS);
 }
 
+/**
+    \brief Function for input all coefficients
+    \param [out] struct Coefficients - The place for saving coefficients
+
+*/
+
 void enter_coefficients(struct Coefficients *coefficients){
+    assert(coefficients != NULL);
     input(&(coefficients->coefficient_a), 'a');
     input(&(coefficients->coefficient_b), 'b');
     input(&(coefficients->coefficient_c), 'c');
     //printf("%f %f %f\n", *coefficient_a, *coefficient_b, *coefficient_c);
 }
 
+/**
+    \brief Function for printing solutions
+
+    \param [in] const struct Solutions - The values of the solutions and type of solutions
+
+*/
+
 void print_solutions(const struct Solutions *solutions){
+    assert(solutions != NULL);
     switch (solutions->special_cases){
         case CASE_TWO_SOLUTIONS_COMPLEX:
             printf("x1 = %.6f + %.6fi\n", solutions->first_solution.real_part,
